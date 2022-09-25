@@ -1,51 +1,42 @@
-import { useEffect, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact, deleteContact, setFilter } from 'redux/phonebook';
 import ContactForm from './ContactForm';
 import ContactList from './ContactList/ContactList';
 import Filter from './Filter';
 
 export default function App() {
-  const [contacts, setContacts] = useState(
-    JSON.parse(localStorage.getItem('phonebook') || '[]')
-  );
-  const [filter, setFilter] = useState('');
+  const dispatch = useDispatch();
+  const state = useSelector(state => state.phonebook.contacts);
 
   useEffect(() => {
-    localStorage.setItem('phonebook', JSON.stringify(contacts));
-  }, [contacts]);
+    localStorage.setItem('phonebook', JSON.stringify(state.items));
+  }, [state.items]);
 
   function onFilterInput(e) {
-    setFilter(e.target.value);
+    dispatch(setFilter(e.target.value));
   }
 
   function onDelete(id) {
-    setContacts(prevState => prevState.filter(item => item.id !== id));
+    dispatch(deleteContact(id));
   }
 
   function onAddContact(name, number) {
-    const isExists = contacts.find(item => item.name.includes(name));
-    if (!isExists) {
-      const newContact = {
-        name,
-        id: uuidv4(),
-        number,
-      };
-      setContacts(prevState => [...prevState, newContact]);
-    } else {
-      alert(`${name} is already in contacts`);
-    }
+    dispatch(addContact({ name, number }));
   }
 
   function filterContacts() {
-    return contacts.filter(item => item.name.toLowerCase().includes(filter));
+    return state.items.filter(item =>
+      item.name.toLowerCase().includes(state.filter)
+    );
   }
 
   return (
     <div>
       <h1>Phonebook</h1>
-      <ContactForm onAddContact={onAddContact} contacts={contacts} />
+      <ContactForm onAddContact={onAddContact} contacts={state.items} />
       <h2>Contacts</h2>
-      <Filter value={filter} onChange={onFilterInput} />
+      <Filter value={state.filter} onChange={onFilterInput} />
       <ContactList contacts={filterContacts()} deleteItem={onDelete} />
     </div>
   );

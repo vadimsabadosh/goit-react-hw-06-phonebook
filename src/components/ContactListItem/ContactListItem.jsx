@@ -12,7 +12,7 @@ function ContactListItem({ number, name, deleteItem, id }) {
 export default ContactListItem;
 
 ContactListItem.propTypes = {
-  number: PropTypes.number.isRequired,
+  number: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   deleteItem: PropTypes.func.isRequired,
   id: PropTypes.string.isRequired,

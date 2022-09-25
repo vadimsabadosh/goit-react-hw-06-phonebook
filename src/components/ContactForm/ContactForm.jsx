@@ -14,13 +14,15 @@ export default function ContactForm({ onAddContact, contacts }) {
   }
 
   function addContact() {
-    const isExists = contacts.find(item => item.name === name);
-    if (!isExists) {
-      onAddContact(name, number);
-      setNumber('');
-      setName('');
-    } else {
-      alert(`${name} is already in contacts`);
+    if (name && number) {
+      const isExists = contacts.find(item => item.name === name);
+      if (!isExists) {
+        onAddContact(name, number);
+        setNumber('');
+        setName('');
+      } else {
+        alert(`${name} is already in contacts`);
+      }
     }
   }
   return (
