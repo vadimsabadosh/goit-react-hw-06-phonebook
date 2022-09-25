@@ -13,7 +13,8 @@ export default function ContactForm({ onAddContact, contacts }) {
     setNumber(e.target.value);
   }
 
-  function addContact() {
+  function addContact(e) {
+    e.preventDefault();
     if (name && number) {
       const isExists = contacts.find(item => item.name === name);
       if (!isExists) {
@@ -26,7 +27,7 @@ export default function ContactForm({ onAddContact, contacts }) {
     }
   }
   return (
-    <div>
+    <form onSubmit={addContact}>
       <div>
         <label htmlFor="name">Name</label>
         <input
@@ -54,8 +55,8 @@ export default function ContactForm({ onAddContact, contacts }) {
           onChange={e => onChangeNumber(e)}
         />
       </div>
-      <button onClick={addContact}>Add contact</button>
-    </div>
+      <button type="submit">Add contact</button>
+    </form>
   );
 }
 ContactForm.propTypes = {
